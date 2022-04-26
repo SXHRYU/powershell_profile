@@ -1,4 +1,4 @@
-Collection of useful automatisation functions I use.
+Collection of useful stuff I use.
 ### rename to "Microsoft.PowerShell_profile.ps1" before using
 
 ## How to use
