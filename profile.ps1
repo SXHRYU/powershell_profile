@@ -73,3 +73,20 @@ function vm_list
 
 Import-Module posh-git
 $GitPromptSettings.EnablePromptStatus = $false
+
+# Custom aliases
+function LessCommand
+	{
+		[CmdletBinding()]
+		param
+		(
+			[Parameter(ValueFromPipeline)]
+			[string[]]$PipedInput
+		)
+		process
+		{
+		& "C:\Program Files (x86)\Git\%USER%\bin\less.exe" "$PipedInput"
+		}
+	}
+
+Set-Alias -Name "less" -Value LessCommand
