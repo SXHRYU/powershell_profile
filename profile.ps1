@@ -3,12 +3,12 @@
 $list_of_custom_functions = @(
 	'run_docker', 
 		"`t 'run_docker' для запуска Docker. `n",
-	'code_django',
-		"`t 'code_django' для перехода к папке с проектом Django в VSCode. `n",
 	'django_server',
 		"`t 'django_server' для запуска Django локал-сервера. Нужно находиться в папке с manage.py. `n",
 	'django_python_shell',
 		"`t 'django_python_shell' для запуска Python Shell проекта Django. Нужно находиться в папке с manage.py. `n",
+	'fastapi_server',
+		"`t 'fastapi_server' для запуска FastAPI локал сервера. Нужно находиться в папке с main.py. `n"
 	'cd_ssh',
 		"`t 'cd_ssh' для перехода к папке .ssh (где файлы known_hosts и id_ECDSA и т. д.). `n",
 	'cd_program',
@@ -41,41 +41,39 @@ Write-Output "`n________________________________________________________________
 Write-Output "`nВведите 'MyFunctions', чтобы показать все кастомные функции. `n" | Green
 Write-Output "Все импортированные модули (например, posh-git) находятся в C:\Program Files\WindowsPowerShell\Modules `n" | Green
 Write-Output "________________________________________________________________ `n"
-	# print PowerShell version.
 Write-Output ($($PSversionTable.Keys)[0] + " " + $($PSversionTable.Values)[0].ToString() + "`n")
 
 
 
-
-
 ##############################################################################
 ##############################################################################
 
-function run_docker { Invoke-Item "C:/Program Files/Docker/Docker/Docker Desktop.exe" }
-function code_django { code "C:/%path_to_django_project%" }
+function run_docker { Invoke-Item "C:\Program Files\Docker\Docker\Docker Desktop.exe" }
 function django_server { python manage.py runserver }
 function django_python_shell { python manage.py shell }
-function cd_ssh { cd "C:/Users/user/.ssh/" }
-function cd_program { cd "C:/Users/user/Desktop/program_fun/" }
+function fastapi_server { uvicorn main:app --reload }
+function cd_ssh { cd "C:\%USER_PATH%\.ssh\" }
+function cd_program { cd "C:\%PATH_TO_DIRECTORY%\program_fun\" }
 function venv_create { python -m venv venv }
 function venv_activate { ./venv/Scripts/Activate.ps1 }
 function run_virtual( [string]$arg1 )
-{
-	# launching VirtualBox and passing in the name of the machine.
-	cd "C:\Program Files\Oracle\VirtualBox"; 
-	.\VirtualBoxVM --startvm $arg1;	
-}
+	{
+		# launching VirtualBox and passing in the name of the machine.
+		cd "C:\Program Files\Oracle\VirtualBox"; 
+		.\VirtualBoxVM --startvm $arg1;	
+	}
 function vm_list 
-{ 
-	cd "C:\Program Files\Oracle\VirtualBox"; 
-	.\VBoxManage.exe list vms
-}
+	{ 
+		cd "C:\Program Files\Oracle\VirtualBox"; 
+		.\VBoxManage.exe list vms
+	}
 
 Import-Module posh-git
 $GitPromptSettings.EnablePromptStatus = $false
 
+
 # Custom aliases
-function LessCommand
+function LessPipeline
 	{
 		[CmdletBinding()]
 		param
@@ -89,4 +87,15 @@ function LessCommand
 		}
 	}
 
-Set-Alias -Name "less" -Value LessCommand
+function sudoFunction( [string]$command )
+	{
+		Start-Process -Verb runas $command
+	}
+
+function Get-PublicIP { $(curl https://ipinfo.io/ip).Parsedhtml.body.innertext }
+
+# DOESN'T ACTUALLY WORK IN PIPELINE!
+Set-Alias -Name "less" -Value LessPipeline
+Set-Alias -Name "sudo" -Value SudoFunction
+Set-Alias -Name "MyPublicIP" -Value Get-PublicIP
+Set-Alias -Name "ifconfig" -Value ipconfig
